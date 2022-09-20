@@ -6,3 +6,6 @@
 
 NodeJS (Express, Socket.io) | Bootstrap CSS | HTML
 
+## TODO
+
+Rooms, logout logic
