@@ -41,10 +41,7 @@ module.exports = (io) => {
             }
         })
 
-        socket.on('logout', () => {
-            usernames.splice(usernames.indexOf(socket.username), 1);
-            io.sockets.emit('get users', usernames);
-        })
+        
         
         socket.on("change room", (data) => {
             socket.leave(room);

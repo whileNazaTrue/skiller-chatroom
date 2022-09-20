@@ -70,6 +70,8 @@ $(function(){
         users.html(html);
     })
 
+
+
     socket.on("change room", (data) => {
         chat.empty()
         console.log(data);
