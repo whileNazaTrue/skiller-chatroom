@@ -22,7 +22,9 @@ $(function(){
 
 
     socket.on('new message', function(data){
+        if (data.msg != ''){
         chat.append('<div class="well" style="background-color:#f0f0ae"><strong>' + data.username + '</strong>: ' + "<br>" + data.msg + '</div>')
+        }
     })
 
     //Set username
@@ -30,13 +32,13 @@ $(function(){
     usernameForm.submit(e => {
         e.preventDefault();
         socket.emit('new user', username.val(), data => {
-            if(data){
+            if(data && username.val() != ''){
                 usernameAux = username.val();
                 $('#user-wrap').hide();
                 $('#content-wrap').show();
             }
             else{
-                $('#error').html("<div class='alert alert-danger'>Username already taken</div>")
+                $('#error').html("<div class='alert alert-danger'>Username already taken or empty</div>")
             }
             username.val('');
         });
@@ -52,7 +54,7 @@ $(function(){
         for(let i = 0; i < data.length; i++){
             if (data[i] == usernameAux){
                 color = "#00ff00";
-                logout = '<a href="/">Logout</a>';
+                logout = '<a class="logout-link" href="/">Logout</a>';
             }
             else{
                 color = "#ff0000";
