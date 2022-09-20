@@ -4,16 +4,25 @@ module.exports = (io) => {
 
     io.on('connection', socket => {
         console.log('New client connected');
+
+        let room = "General";
+        socket.join(room);
+
         socket.on('disconnect', () => {
             console.log('Client disconnected');
         });
 
         socket.on('send message', (data) => {
+            /*
             io.sockets.emit('new message', {
                 msg: data,
                 username: socket.username
             })
-            
+            */
+            io.sockets.in(room).emit('new message', {
+            msg: data,
+            username: socket.username
+        })
         })
 
         socket.on('new user', (data, callback) => {
@@ -30,6 +39,18 @@ module.exports = (io) => {
             console.log(usernames)
 
             }
+        })
+
+        socket.on('logout', () => {
+            usernames.splice(usernames.indexOf(socket.username), 1);
+            io.sockets.emit('get users', usernames);
+        })
+        
+        socket.on("change room", (data) => {
+            socket.leave(room);
+            socket.join(data);
+            room = data;
+            socket.emit("change room", data);
         })
 
     });

@@ -8,6 +8,10 @@ $(function(){
     const username = $('#username-txt');
 
     const users = $('#users');
+
+    const room = $("#room").change(function(){
+        socket.emit("change room", $(this).val());
+    })
     
     let usernameAux = '';
 
@@ -15,6 +19,8 @@ $(function(){
 
     //Send message
     messageForm.submit(e =>{
+        
+        
         e.preventDefault();
         socket.emit('send message', message.val());
         message.val('');
@@ -42,9 +48,8 @@ $(function(){
             }
             username.val('');
         });
-    
+        
     }
-
     )
 
     socket.on('get users', (data) =>{
@@ -65,4 +70,9 @@ $(function(){
         users.html(html);
     })
 
+    socket.on("change room", (data) => {
+        chat.empty()
+        console.log(data);
+    }
+    )
 })
