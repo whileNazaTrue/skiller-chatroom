@@ -1,6 +1,11 @@
 module.exports = (io) => {
+    const fs = require('fs');
+    if (!fs.existsSync('users.json')) {
+        fs.writeFileSync('users.json', JSON.stringify({}));
+    }
+    
+    const usernames = Object.keys(JSON.parse(fs.readFileSync('users.json')));
 
-    const usernames = [];
 
     io.on('connection', socket => {
         console.log('New client connected');
@@ -13,17 +18,24 @@ module.exports = (io) => {
         });
 
         socket.on('send message', (data) => {
-            /*
-            io.sockets.emit('new message', {
-                msg: data,
-                username: socket.username
-            })
-            */
+            
             io.sockets.in(room).emit('new message', {
             msg: data,
             username: socket.username
         })
-        })
+        console.log(data)
+        //append the message to a json file with the room name
+        //if the file doesn't exist, create it
+        if (!fs.existsSync(`${room}.json`)) {
+            fs.writeFileSync(`${room}.json`, JSON.stringify([]));
+        }
+        let messages = JSON.parse(fs.readFileSync(`${room}.json`));
+        messages.push({
+            msg: data,
+            username: socket.username
+        });
+        fs.writeFileSync(`${room}.json`, JSON.stringify(messages));
+    })
 
         socket.on('new user', (data, callback) => {
             if(usernames.indexOf(data) != -1){
@@ -37,11 +49,9 @@ module.exports = (io) => {
             io.sockets.emit('get users', usernames);
             console.log(data)
             console.log(usernames)
-
+            fs.writeFileSync('users.json', JSON.stringify(usernames));
             }
         })
-
-        
         
         socket.on("change room", (data) => {
             socket.leave(room);

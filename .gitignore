@@ -1,2 +1,8 @@
 .env
 /node_modules
+mail.json
+python.json
+users.json
+general.json
+php.json
+java.json
