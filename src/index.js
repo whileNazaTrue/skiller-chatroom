@@ -18,6 +18,11 @@ app.use(morgan("dev"))
 app.use("/mail", mailRoute)
 
 
+app.get('/mails', (req, res) => {
+    res.sendFile(path.join(__dirname, '/public/mail/mail.html'));
+})
+
+
 app.use("*", (req, res) => {
     res.redirect("/")
 })
