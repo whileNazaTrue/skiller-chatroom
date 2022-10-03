@@ -24,8 +24,7 @@ module.exports = (io) => {
             username: socket.username
         })
         console.log(data)
-        //append the message to a json file with the room name
-        //if the file doesn't exist, create it
+        
         if (!fs.existsSync(`${room}.json`)) {
             fs.writeFileSync(`${room}.json`, JSON.stringify([]));
         }
